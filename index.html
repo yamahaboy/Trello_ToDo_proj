@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cardo:ital@1&family=Montserrat:wght@300;600&family=Open+Sans&family=Raleway:wght@400;700&family=Roboto:ital,wght@0,100;1,900&family=Spectral+SC:wght@600&display=swap"
+      rel="stylesheet"
+    />
+    <title>ToDo project</title>
+  </head>
+  <body>
+    <div class="app" id="app">
+      <div class="card" id="cards">
+        <div class="card-item" id="toDo">
+          <span class="title" id="title">ToDo</span>
+          <div class="toDo-list" id="toDo-list">
+            <div class="drag-container" id="toDo-item-container"></div>
+            <div class="form-card" id="todo-form-card">
+              <textarea
+                class="textarea"
+                id="toDo-textarea"
+                placeholder="Enter information"
+              ></textarea>
+              <div class="buttons" id="buttons">
+                <button class="add-card" id="toDo-add-card">Add card</button>
+                <button class="cancel-card" id="toDo-cancel-card">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="add-item" id="toDo-add-item"><span>+</span></div>
+        </div>
+        <div class="card-item" id="inProgress">
+          <span class="title" id="title">InProgress</span>
+          <div class="toDo-list" id="inProgress-list">
+            <div  class="drag-container" id="inProgress-item-container"></div>
+            <div class="form-card" id="inProgress-form-card">
+              <textarea
+                class="textarea"
+                id="inProgress-textarea"
+                placeholder="Enter information"
+              ></textarea>
+              <div class="buttons" id="buttons">
+                <button class="add-card" id="inProgress-add-card">
+                  Add card
+                </button>
+                <button class="cancel-card" id="inProgress-cancel-card">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="add-item" id="inProgress-add-item"><span>+</span></div>
+        </div>
+        <div class="card-item" id="done">
+          <span class="title" id="title">Done</span>
+          <div class="toDo-list" id="done-list">
+            <div  class="drag-container" id="done-item-container"></div>
+            <div class="form-card" id="done-form-card">
+              <textarea
+                class="textarea"
+                id="done-textarea"
+                placeholder="Enter information"
+              ></textarea>
+              <div class="buttons" id="buttons">
+                <button class="add-card" id="done-add-card">Add card</button>
+                <button class="cancel-card" id="done-cancel-card">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="add-item" id="done-add-item"><span>+</span></div>
+        </div>
+        <div class="card-item" id="deleted">
+          <span class="title" id="title">Deleted</span>
+          <div class="toDo-list" id="deleted-list">
+            <div  class="drag-container" id="deleted-item-container"></div>
+            <div class="form-card" id="deleted-form-card">
+              <textarea
+                class="textarea"
+                id="deleted-textarea"
+                placeholder="Enter information"
+              ></textarea>
+              <div class="buttons" id="buttons">
+                <button class="add-card" id="deleted-add-card">Add card</button>
+                <button class="cancel-card" id="deleted-cancel-card">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="add-item" id="deleted-add-item"><span>+</span></div>
+        </div>
+      </div>
+    </div>
+    <script src="./js/fmain.js"></script>
+  </body>
+</html>
+

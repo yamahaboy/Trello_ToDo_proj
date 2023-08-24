@@ -30,7 +30,7 @@ const drawCard = (data, cardItemId) => {
       <div class="toDo-list-item" id="${id}" draggable="true">${textarea} 
       ${
         cardItemId === "deleted"
-          ? `<div><button class="restore-button">res</button></div>`
+          ?`<img class="restore-button" src="./svg/restore-icon.svg"/></div>`
           : `<img class="delete-icon" src="./svg/recycle-bin-icon.svg"/></div>`
       }
       </div>`;

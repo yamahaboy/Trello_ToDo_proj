@@ -146,4 +146,16 @@ body {
 .delete-icon img {
   width: 100%;
   height: auto;
+}
+
+.restore-button {
+  float: right;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.restore-button img {
+  width: 100%;
+  height: auto;
 }/*# sourceMappingURL=style.css.map */

@@ -19,8 +19,6 @@ const closeCard = (form, addButton, saveCard, textarea) => {
   saveCard.style.display = "flex";
 };
 
-
-
 const drawCard = (data, cardItemId) => {
   const list = document.querySelector(`#${cardItemId}-item-container`);
   list.innerHTML = "";
@@ -46,23 +44,24 @@ const drawCard = (data, cardItemId) => {
   }
 };
 
-const addNewCard = (data, textarea, event) => {
+const addNewCard = (data, textarea, editingCardId, event) => {
   event.preventDefault();
   const cardItem = event.target.closest(".card-item");
   const cardItemId = cardItem.id;
-  if (editingCardId === null) {
+
+  if (editingCardId[0] === null) {
     data[cardItemId].push({
       id: Date.now(),
       textarea: textarea.value,
     });
   } else {
     const cardToUpdate = data[cardItemId].find(
-      ({ id }) => id === editingCardId
+      ({ id }) => id === editingCardId[0]
     );
     if (cardToUpdate) {
       cardToUpdate.textarea = textarea.value;
     }
-    editingCardId = null;
+    editingCardId[0] = null;
   }
 
   drawCard(data, cardItemId);
@@ -94,15 +93,13 @@ const restoreCard = (data, cardId) => {
   }
 };
 
-const setEditingCard = (cardId) => {
-  editingCardId = cardId;
+const setEditingCard = (editingCardId, cardId) => {
+  editingCardId[0] = cardId;
 };
 
 const saveDataToLocalStorage = (data) => {
   localStorage.setItem("taskData", JSON.stringify(data));
 };
-
-let editingCardId = null;
 
 const init = () => {
   let data = JSON.parse(localStorage.getItem("taskData")) || {
@@ -118,6 +115,7 @@ const init = () => {
   drawCard(data, "deleted");
 
   console.log(data);
+  const editingCardId = [null];
 
   //Todo col
   const ToDoform = document.querySelector("#todo-form-card");
@@ -148,7 +146,7 @@ const init = () => {
 
   addToDoButton.addEventListener("click", (event) => {
     event.preventDefault();
-    addNewCard(data, toDotextarea, event, "toDo");
+    addNewCard(data, toDotextarea, editingCardId, event, "toDo");
     closeCard(ToDoform, addToDoButton, saveToDoCard, toDotextarea);
     saveDataToLocalStorage(data);
   });
@@ -158,8 +156,11 @@ const init = () => {
       deleteHandler(event, data, "toDo");
       saveDataToLocalStorage(data);
     }
+
     if (event.target.closest(".toDo-list-item")) {
       const cardId = +event.target.closest(".toDo-list-item").id;
+      setEditingCard(editingCardId, cardId);
+
       const card = data["toDo"].find(({ id }) => id === cardId);
 
       const isCardOpen = event.target
@@ -169,7 +170,6 @@ const init = () => {
         closeCard(ToDoform, addToDoButton, saveToDoCard, toDotextarea);
         event.target.closest(".toDo-list-item").classList.remove("open");
       } else if (card) {
-        setEditingCard(cardId);
         toDotextarea.value = card.textarea;
         openCard(ToDoform, saveToDoCard);
         event.target.closest(".toDo-list-item").classList.add("open");
@@ -208,7 +208,7 @@ const init = () => {
 
   addInProgressButton.addEventListener("click", (event) => {
     event.preventDefault();
-    addNewCard(data, inProgressTextarea, event, "inProgress");
+    addNewCard(data, inProgressTextarea, editingCardId, event, "inProgress");
     closeCard(
       inProgressForm,
       addInProgressButton,
@@ -223,8 +223,11 @@ const init = () => {
       deleteHandler(event, data, "inProgress");
       saveDataToLocalStorage(data);
     }
+
     if (event.target.closest(".toDo-list-item")) {
       const cardId = +event.target.closest(".toDo-list-item").id;
+      setEditingCard(editingCardId, cardId);
+
       const card = data["inProgress"].find(({ id }) => id === cardId);
 
       const isCardOpen = event.target
@@ -239,13 +242,14 @@ const init = () => {
         );
         event.target.closest(".toDo-list-item").classList.remove("open");
       } else if (card) {
-        setEditingCard(cardId);
         inProgressTextarea.value = card.textarea;
         openCard(inProgressForm, saveInProgressCard);
         event.target.closest(".toDo-list-item").classList.add("open");
       }
     }
   });
+
+
 
   //Done col
   const doneForm = document.querySelector("#done-form-card");
@@ -276,7 +280,7 @@ const init = () => {
 
   addDoneButton.addEventListener("click", (event) => {
     event.preventDefault();
-    addNewCard(data, doneTextarea, event, "done");
+    addNewCard(data, doneTextarea, editingCardId, event, "done");
     closeCard(doneForm, addDoneButton, saveDoneCard, doneTextarea);
     saveDataToLocalStorage(data);
   });
@@ -286,8 +290,11 @@ const init = () => {
       deleteHandler(event, data, "done");
       saveDataToLocalStorage(data);
     }
+
     if (event.target.closest(".toDo-list-item")) {
       const cardId = +event.target.closest(".toDo-list-item").id;
+      setEditingCard(editingCardId, cardId);
+
       const card = data["done"].find(({ id }) => id === cardId);
 
       const isCardOpen = event.target
@@ -297,13 +304,13 @@ const init = () => {
         closeCard(doneForm, addDoneButton, saveDoneCard, doneTextarea);
         event.target.closest(".toDo-list-item").classList.remove("open");
       } else if (card) {
-        setEditingCard(cardId);
         doneTextarea.value = card.textarea;
         openCard(doneForm, saveDoneCard);
         event.target.closest(".toDo-list-item").classList.add("open");
       }
     }
   });
+
   //Deleted col
   const deletedForm = document.querySelector("#deleted-form-card");
   const addDeletedButton = document.querySelector("#deleted-add-card");
@@ -333,7 +340,7 @@ const init = () => {
 
   addDeletedButton.addEventListener("click", (event) => {
     event.preventDefault();
-    addNewCard(data, deletedTextarea, event, "deleted");
+    addNewCard(data, deletedTextarea, editingCardId, event, "deleted");
     closeCard(deletedForm, addDeletedButton, saveDeletedCard, deletedTextarea);
     saveDataToLocalStorage(data);
   });
@@ -344,29 +351,27 @@ const init = () => {
       restoreCard(data, cardId);
       saveDataToLocalStorage(data);
     }
+
     if (event.target.closest(".toDo-list-item")) {
       const cardId = +event.target.closest(".toDo-list-item").id;
+      setEditingCard(editingCardId, cardId);
+
       const card = data["deleted"].find(({ id }) => id === cardId);
 
       const isCardOpen = event.target
         .closest(".toDo-list-item")
         .classList.contains("open");
       if (isCardOpen) {
-        closeCard(
-          deletedForm,
-          addDeletedButton,
-          saveDeletedCard,
-          deletedTextarea
-        );
+        closeCard(deletedForm, addDeletedButton, saveDeletedCard, deletedTextarea);
         event.target.closest(".toDo-list-item").classList.remove("open");
       } else if (card) {
-        setEditingCard(cardId);
         deletedTextarea.value = card.textarea;
         openCard(deletedForm, saveDeletedCard);
         event.target.closest(".toDo-list-item").classList.add("open");
       }
     }
   });
+
   //drag and drop
   const itemContainers = document.querySelectorAll(".toDo-list");
 
@@ -415,4 +420,3 @@ const init = () => {
 };
 
 init();
-

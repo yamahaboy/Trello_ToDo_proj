@@ -28,10 +28,9 @@ const drawCard = (data, cardItemId) => {
   data[cardItemId].forEach(({ id, textarea }) => {
     const todoItemsHTML = `
       <div class="toDo-list-item" id="${id}" draggable="true">${textarea} 
-      ${
-        cardItemId === "deleted"
-          ?`<img class="restore-button" src="./svg/restore-icon.svg"/></div>`
-          : `<img class="delete-icon" src="./svg/recycle-bin-icon.svg"/></div>`
+      ${cardItemId === "deleted"
+        ? `<img class="restore-button" src="./svg/restore-icon.svg"/></div>`
+        : `<img class="delete-icon" src="./svg/recycle-bin-icon.svg"/></div>`
       }
       </div>`;
     list.insertAdjacentHTML("beforeend", todoItemsHTML);
@@ -97,19 +96,6 @@ const restoreCard = (data, cardId) => {
 
 const setEditingCard = (cardId) => {
   editingCardId = cardId;
-};
-
-const saveCard = (data, cardItemId, textarea) => {
-  if (editingCardId) {
-    const cardIndex = data[cardItemId].findIndex(
-      ({ id }) => id === editingCardId
-    );
-    if (cardIndex !== -1) {
-      data[cardItemId][cardIndex].textarea = textarea.value;
-    }
-    editingCardId = null;
-    drawCard(data, cardItemId);
-  }
 };
 
 const saveDataToLocalStorage = (data) => {

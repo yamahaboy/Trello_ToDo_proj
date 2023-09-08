@@ -135,7 +135,7 @@ const restoreCard = (data: TaskData, cardId: number) => {
   }
 };
 
-const setEditingCard = (editingCardId: number[], cardId: number) => {
+const setEditingCard = (editingCardId: (number | null)[], cardId: number) => {
   editingCardId[0] = cardId;
 };
 
@@ -144,12 +144,20 @@ const saveDataToLocalStorage = (data: TaskData) => {
 };
 
 const init = () => {
-  let data = (TaskData = JSON.parse(localStorage.getItem("taskData")) || {
-    toDo: [],
-    inProgress: [],
-    done: [],
-    deleted: [],
-  });
+  const storedData = localStorage.getItem("taskData");
+
+  let data: TaskData;
+
+  if (storedData) {
+    data = JSON.parse(storedData);
+  } else {
+    data = {
+      toDo: [],
+      inProgress: [],
+      done: [],
+      deleted: [],
+    };
+  }
 
   drawCard(data, "toDo");
   drawCard(data, "inProgress");
@@ -178,53 +186,54 @@ const init = () => {
   addToDoButton.style.display = "none";
   saveToDoCard.style.display = "flex";
 
-  // saveToDoCard.addEventListener("click", () => {
-  //   openCard(ToDoform, saveToDoCard);
-  // });
+  saveToDoCard.addEventListener("click", () => {
+    openCard(ToDoform, saveToDoCard);
+  });
 
-  // toDotextarea.addEventListener("input", (event) => {
-  //   checkOnValue(addToDoButton, event);
-  // });
+  toDotextarea.addEventListener("input", (event) => {
+    checkOnValue(addToDoButton, event);
+  });
 
-  // cancelToDoButton.addEventListener("click", (event) => {
-  //   toDotextarea.value = "";
-  //   ToDoform.style.display = "none";
-  //   saveToDoCard.style.display = "flex";
-  //   checkOnValue(addToDoButton, event);
-  // });
+  cancelToDoButton.addEventListener("click", (event) => {
+    toDotextarea.value = "";
+    ToDoform.style.display = "none";
+    saveToDoCard.style.display = "flex";
+    checkOnValue(addToDoButton, event);
+  });
 
-  // addToDoButton.addEventListener("click", (event) => {
-  //   event.preventDefault();
-  //   addNewCard(data, toDotextarea, editingCardId, event, "toDo");
-  //   closeCard(ToDoform, addToDoButton, saveToDoCard, toDotextarea);
-  //   saveDataToLocalStorage(data);
-  // });
+  addToDoButton.addEventListener("click", (event) => {
+    event.preventDefault();
+    addNewCard(data, toDotextarea, editingCardId, event);
+    closeCard(ToDoform, addToDoButton, saveToDoCard, toDotextarea);
+    saveDataToLocalStorage(data);
+  });
 
-  // toDoList.addEventListener("click", (event) => {
-  //   if (event.target.classList.contains("delete-icon")) {
-  //     deleteHandler(event, data, "toDo");
-  //     saveDataToLocalStorage(data);
-  //   }
+  toDoList.addEventListener("click", (event) => {
+    const target = event.target as HTMLElement;
+    if (target.classList.contains("delete-icon")) {
+      deleteHandler(event, data, "toDo");
+      saveDataToLocalStorage(data);
+    }
 
-  //   if (event.target.closest(".toDo-list-item")) {
-  //     const cardId = +event.target.closest(".toDo-list-item").id;
-  //     setEditingCard(editingCardId, cardId);
+    if (target.closest(".toDo-list-item")) {
+      const cardIdElement = target.closest(".toDo-list-item");
+      if (cardIdElement) {
+        const cardId = +cardIdElement.id;
+        setEditingCard(editingCardId, cardId);
 
-  //     const card = data["toDo"].find(({ id }) => id === cardId);
-
-  //     const isCardOpen = event.target
-  //       .closest(".toDo-list-item")
-  //       .classList.contains("open");
-  //     if (isCardOpen) {
-  //       closeCard(ToDoform, addToDoButton, saveToDoCard, toDotextarea);
-  //       event.target.closest(".toDo-list-item").classList.remove("open");
-  //     } else if (card) {
-  //       toDotextarea.value = card.textarea;
-  //       openCard(ToDoform, saveToDoCard);
-  //       event.target.closest(".toDo-list-item").classList.add("open");
-  //     }
-  //   }
-  // });
+        const card = data["toDo"].find(({ id }) => id === cardId);
+        const isCardOpen = cardIdElement.classList.contains("open");
+        if (isCardOpen) {
+          closeCard(ToDoform, addToDoButton, saveToDoCard, toDotextarea);
+          cardIdElement.classList.remove("open");
+        } else if (card) {
+          toDotextarea.value = card.textarea;
+          openCard(ToDoform, saveToDoCard);
+          cardIdElement.classList.add("open");
+        }
+      }
+    }
+  });
 };
 
 init();

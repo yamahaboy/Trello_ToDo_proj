@@ -320,62 +320,14 @@ var init = function () {
         }
     });
     //delete column
-    var deletedForm = document.querySelector("#deleted-form-card");
-    var addDeletedButton = document.querySelector("#deleted-add-card");
-    var cancelDeletedButton = document.querySelector("#deleted-cancel-card");
-    var saveDeletedCard = document.querySelector("#deleted-add-item");
-    var deletedTextarea = document.querySelector("#deleted-textarea");
     var deletedList = document.querySelector("#deleted-list");
-    deletedForm.style.display = "none";
-    addDeletedButton.style.display = "none";
-    saveDeletedCard.style.display = "flex";
-    saveDeletedCard.addEventListener("click", function () {
-        openCard(deletedForm, saveDeletedCard);
-    });
-    deletedTextarea.addEventListener("input", function (event) {
-        checkOnValue(addDeletedButton, event);
-    });
-    cancelDeletedButton.addEventListener("click", function (event) {
-        deletedTextarea.value = "";
-        deletedForm.style.display = "none";
-        saveDeletedCard.style.display = "flex";
-        checkOnValue(addDeletedButton, event);
-    });
-    addDeletedButton.addEventListener("click", function (event) {
-        event.preventDefault();
-        addNewCard(data, deletedTextarea, editingCardId, event);
-        closeCard(deletedForm, addDeletedButton, saveDeletedCard, deletedTextarea);
-        if (typeof localStorage !== "undefined") {
-            saveDataToLocalStorage(data);
-        }
-    });
+    // deletedForm.style.display = "none";
     deletedList.addEventListener("click", function (event) {
         var target = event.target;
         if (target.classList.contains("restore-button")) {
             deleteHandler(event, data, "deleted");
             if (typeof localStorage !== "undefined") {
                 saveDataToLocalStorage(data);
-            }
-        }
-        if (target.closest(".toDo-list-item")) {
-            var cardIdElement = target.closest(".toDo-list-item");
-            if (cardIdElement) {
-                var cardId_5 = +cardIdElement.id;
-                setEditingCard(editingCardId, cardId_5);
-                var card = data["deleted"].find(function (_a) {
-                    var id = _a.id;
-                    return id === cardId_5;
-                });
-                var isCardOpen = cardIdElement.classList.contains("open");
-                if (isCardOpen) {
-                    closeCard(deletedForm, addDeletedButton, saveDeletedCard, deletedTextarea);
-                    cardIdElement.classList.remove("open");
-                }
-                else if (card) {
-                    deletedTextarea.value = card.textarea;
-                    openCard(deletedForm, saveDeletedCard);
-                    cardIdElement.classList.add("open");
-                }
             }
         }
     });
